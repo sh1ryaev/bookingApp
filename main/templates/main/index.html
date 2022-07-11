@@ -1,0 +1,186 @@
+{% extends 'main/base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+<div style=" background-color: black;">
+    <img src="https://sutochno.ru/front/searchapp/assets/img/interior-big.764337ef.webp" alt="" style="opacity: 50%">
+    <h1 style="color: white; position: absolute; top: 40%; left: 33%">Бронируйте жилье для отдыха</h1>
+    <div class="border border-2 p-2 mb-2 bg-light w-75 mx-auto rounded-pill" style="position: absolute; top: 60%; left: 13%">
+        <form class="row row-cols-lg-auto g-3 align-items-center d-flex justify-content-center" action="/catalog" method="POST">
+            {% csrf_token %}
+  <div class="col-12">
+    <label class="" for="place">Местоположение</label>
+    <div class="input-group">
+        <div class="input-group-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+  <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
+</svg>
+        </div>
+      <input type="text" class="form-control" id="place" name="place" placeholder="Куда едете?">
+    </div>
+  </div>
+
+  <div class="col-12">
+    <label class="" for="start">Прибытие</label>
+      <input type="date" id="start" name="start" value="{{ start }}" class="form-control">
+  </div>
+
+  <div class="col-12">
+    <label class="" for="finish">Отъезд</label>
+    <input type="date" id="finish" name="finish" value="{{ finish }}" class="form-control">
+  </div>
+    <div class="col-12">
+    <label class="" for="kolvo">Количество гостей</label>
+    <select class="form-select" name="kolvo" id="kolvo">
+      <option selected>1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+    </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg>
+    </button>
+  </div>
+</form>
+    </div>
+</div>
+    <div class="container px-4 mt-5 mb-5">
+    <h4>Популярные направления сейчас</h4>
+    <div class="row justify-content-center">
+    <div class="col">
+        <div class="card shadow">
+            <img src="https://kuda-kazan.ru/uploads/972c66592e784dbd45b7c8200c3c8b49.jpg" class="card-img-top" alt="..." style="height: 13rem;object-fit: cover;">
+        <div class="card-body">
+    <h4 class="card-title"><strong>Казань</strong></h4>
+    <a href="catalog?city=Казань" class="btn text-muted">Посмотреть варианты({{ kolvo1 }})</a>
+  </div>
+</div>
+    </div>
+    <div class="col">
+           <div class="card shadow" >
+  <img src="https://img.geliophoto.com/ufa/01_ufa.jpg" class="card-img-top" alt="..." style="height: 13rem;object-fit: cover;">
+  <div class="card-body">
+    <h4 class="card-title"><strong>Уфа</strong></h4>
+
+        <a href="catalog?city=Уфа" class="btn text-muted">Посмотреть варианты({{ kolvo2 }})</a>
+  </div>
+</div>
+    </div>
+           <div class="col">
+           <div class="card shadow" >
+  <img src="https://perito-burrito.com/uploads/post/image/fc90ff198b96da0d843b1f7ca3716f5c566b61b3a714c2b7a5c5d02246b954bf/main_%D0%9D%D0%B8%D0%B6%D0%BD%D0%B5-%D0%92%D0%BE%D0%BB%D0%B6%D1%81%D0%BA%D0%B0%D1%8F-%D0%BD%D0%B0%D0%B1%D0%B5%D1%80%D0%B5%D0%B6%D0%BD%D0%B0%D1%8F_3.jpg" class="card-img-top" alt="..." style="height: 13rem;">
+  <div class="card-body">
+        <h4 class="card-title"><strong>Нижний Новгород</strong></h4>
+        <a href="catalog?city=Нижний Новгород" class="btn text-muted">Посмотреть варианты({{ kolvo3 }})</a>
+  </div>
+</div>
+    </div>
+           <div class="col">
+           <div class="card shadow" >
+               <a href="#" class="stretched-link"></a>
+  <img src="https://i.pinimg.com/originals/5e/60/b5/5e60b56853b2091049fa28ffd9473a84.jpg" class="card-img-top" alt="..." style="height: 13rem;object-fit: cover;">
+  <div class="card-body">
+    <h4 class="card-title"><strong>Санкт-Петербург</strong></h4>
+            <a href="catalog?city=Санкт-Петербург" class="btn text-muted">Посмотреть варианты({{ kolvo4 }})</a>
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+    <div class="container px-4 py-5" id="icon-grid">
+    <h2 class="pb-2 border-bottom">Сервис бронирования жилья для поездок</h2>
+    <center>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5">
+      <div class="col d-flex align-items-start">
+        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="blue" class="bi bi-shield-check" viewBox="0 0 16 16">
+  <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
+  <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+</svg>
+        <div>
+          <h4 class="">Гарантия успешного заселения</h4>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="blue" class="bi bi-percent" viewBox="0 0 16 16">
+  <path d="M13.442 2.558a.625.625 0 0 1 0 .884l-10 10a.625.625 0 1 1-.884-.884l10-10a.625.625 0 0 1 .884 0zM4.5 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm7 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+</svg>
+        <div>
+          <h4 class="">Без наценок и скрытых комиссий</h4>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="blue" class="bi bi-funnel" viewBox="0 0 16 16">
+  <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z"/>
+</svg>
+        <div>
+          <h4 class="">Удобная система фильтров</h4>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="blue" class="bi bi-safe" viewBox="0 0 16 16">
+  <path d="M1 1.5A1.5 1.5 0 0 1 2.5 0h12A1.5 1.5 0 0 1 16 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-12A1.5 1.5 0 0 1 1 14.5V13H.5a.5.5 0 0 1 0-1H1V8.5H.5a.5.5 0 0 1 0-1H1V4H.5a.5.5 0 0 1 0-1H1V1.5zM2.5 1a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5h12a.5.5 0 0 0 .5-.5v-13a.5.5 0 0 0-.5-.5h-12z"/>
+  <path d="M13.5 6a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zM4.828 4.464a.5.5 0 0 1 .708 0l1.09 1.09a3.003 3.003 0 0 1 3.476 0l1.09-1.09a.5.5 0 1 1 .707.708l-1.09 1.09c.74 1.037.74 2.44 0 3.476l1.09 1.09a.5.5 0 1 1-.707.708l-1.09-1.09a3.002 3.002 0 0 1-3.476 0l-1.09 1.09a.5.5 0 1 1-.708-.708l1.09-1.09a3.003 3.003 0 0 1 0-3.476l-1.09-1.09a.5.5 0 0 1 0-.708zM6.95 6.586a2 2 0 1 0 2.828 2.828A2 2 0 0 0 6.95 6.586z"/>
+</svg>
+        <div>
+          <h4 class="">Прозрачная политика безопасности</h4>
+        </div>
+      </div>
+    </div>
+        </center>
+  </div>
+    <div class="container ">
+     <div class="container px-4 mt-5 mb-5">
+    <h4>Выберите тип своего отдыха</h4>
+    <div class="row justify-content-center">
+    <div class="col">
+        <div class="card shadow">
+            <img src="https://kazanriviera.ru/upload/medialibrary/2ed/2ed0d32a6992aa4962f9bfe013c8e875.jpg" class="card-img-top" alt="..." style="height: 13rem;object-fit: cover;">
+        <div class="card-body">
+    <h4 class="card-title"><strong>Отель</strong></h4>
+            <a href="catalog?ctg=Отель" class="btn text-muted">Посмотреть варианты</a>
+  </div>
+</div>
+    </div>
+    <div class="col">
+           <div class="card shadow" >
+  <img src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/266695556.jpg?k=784511f3e225825a4c4894c3be812adc26a2468b6702717fea512326804a60d0&o=&hp=1" class="card-img-top" alt="..." style="height: 13rem;object-fit: cover;">
+  <div class="card-body">
+    <h4 class="card-title"><strong>Хостел</strong></h4>
+      <a href="catalog?ctg=Хостел" class="btn text-muted">Посмотреть варианты</a>
+  </div>
+</div>
+    </div>
+           <div class="col">
+           <div class="card shadow" >
+  <img src="https://polis-group.ru/sites/default/files/buildings/studio_0020000-min.png" class="card-img-top" alt="..." style="height: 13rem;">
+  <div class="card-body">
+        <h4 class="card-title"><strong>Аппартаменты</strong></h4>
+
+        <a href="catalog?ctg=Аппартаменты" class="btn text-muted">Посмотреть варианты</a>
+  </div>
+</div>
+    </div>
+           <div class="col">
+           <div class="card shadow" >
+  <img src="https://novmetr.ru/wa-data/public/blog/img/163300408.jpg" class="card-img-top" alt="..." style="height: 13rem;object-fit: cover;">
+  <div class="card-body">
+    <h4 class="card-title"><strong>Коттедж</strong></h4>
+
+                 <a href="catalog?ctg=Коттедж" class="btn text-muted">Посмотреть варианты</a>
+
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+    </div>
+{% endblock %}

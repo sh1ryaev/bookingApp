@@ -1,0 +1,226 @@
+{% extends 'main/base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+<body>
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    <div class="container">
+    <div class="mb-4">
+        <h5><strong>{{ rent_obj.name }}</strong></h5>
+        <span><strong>{{ rent_obj.city }}</strong></span>
+        <span>{{ rent_obj.address }}</span>
+    </div>
+        <div class="row">
+                  <div class="col-md-7">
+        <div id="carouselExampleControls{{ forloop.counter }}" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+  <div class="carousel-item active">
+      <img src="{{ mainphoto.cover.url }}" class="d-block w-100" alt="..." style="object-fit: cover; width: 1000px; height: 500px;">
+    </div>
+      {% for item in photos %}
+                <div class="carousel-item" style="background-color: lightgrey;">
+                    <img src="{{ item.cover.url}}" class="d-block w-100" alt="..." style="object-fit: cover; width: 1000px; height: 500px;">
+                </div>
+      {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls{{ forloop.counter }}" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls{{ forloop.counter }}" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+                  <div class="shadow p-3 mb-5 bg-body rounded mt-4">
+                      <h4><strong>О нас</strong></h4>
+                  <p>{{ rent_obj.description }}</p>
+                  </div>
+                  <div class="shadow p-3 mb-5 bg-body rounded mt-4">
+                        <h4>Основные удобства</h4>
+                      <ul>
+                          {% for foo in comfort %}
+                                <li>{{ foo }}</li>
+                          {% endfor %}
+                      </ul>
+                  </div>
+                  <div class="card shadow p-3 mb-5 bg-body rounded mt-4" >
+      {% for num in rent_num %}
+    <div class="row g-0 ">
+    <div class="col-md-4">
+        {% for photo in photos  %}
+                {% if photo.id_obj == num.id %}
+                      <div class="carousel-item active">
+      <img src="{{ photo.cover.url }}" class="d-block w-100" alt="..." style="width: 100px; height: 180px; object-fit: cover">
+    </div>
+                {% endif %}
+            {% endfor %}
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">Номер {{ num.id  }}</h5>
+        <p class="card-text">Количество спальных мест: {{ num.bed_count }}</p>
+                  <p class="card-text">Цена за сутки: <strong>{{ num.price }}₽</strong></p>
+          <form action="/rentobject" method="POST">
+                                          {% csrf_token %}
+                <input type="hidden" name="id" value="{{ num.id }}">
+                              <input type="hidden" name="obj_id" value="{{ rent_obj.id }}">
+              <input type="hidden" name="isPrice" value="yes">
+              {% if booking_num.id == num.id %}
+                  <button class="btn btn-primary"  disabled>Добавлено</button>
+              {% else %}
+                  <button class="btn btn-primary" >Добавить</button>
+              {% endif %}
+          </form>
+      </div>
+    </div>
+  </div>
+      {% endfor %}
+</div>
+      </div>
+            <div class="col shadow p-3 mb-5 bg-body rounded">
+                <form action="/rentobject" method="POST">
+                    {% csrf_token %}
+                                    <input type="hidden" name="id" value="{{ rent_obj.id }}">
+                    <div class="row">
+                      <div class="col-5">
+    <label class="" for="start">Прибытие</label>
+      <input type="date" id="start" name="start" class="form-control" value="{{ start }}">
+  </div>
+                      <div class="col-5">
+    <label class="" for="finish">Отъезд</label>
+    <input type="date" id="finish" name="finish" class="form-control" value="{{ finish }}">
+  </div>
+                         <div class="col-10">
+    <label class="" for="kolvo">Количество гостей</label>
+    <select class="form-select" name="kolvo" id="kolvo">
+      <option selected>1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+    </div>
+             </div>
+           <center> <div class="container mb-4 mt-4">
+                <h4>Итого <strong>{{ summa }}₽</strong> за <strong>{{ cnt_days }}</strong> суток </h4>
+           {% if booking_num %}
+                <div class="row g-0 shadow p-3 mb-5 bg-body rounded">
+    <div class="col-md-4">
+        {% for photo in photos  %}
+                {% if photo.id_obj == booking_num.id %}
+                      <div class="carousel-item active">
+      <img src="{{ photo.cover.url }}" class="d-block w-100" alt="..." style="width: 100px; height: 180px; object-fit: cover">
+    </div>
+                {% endif %}
+            {% endfor %}
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+          <a href="rentobject?book_id={{ booking_num.id }}&obj_id={{ rent_obj.id  }}" class="btn-close" aria-label="Close" style="float: right; position: relative;"></a>
+        <p class="card-title">Номер №{{ booking_num.id }}</p>
+        <p class="card-text">Количество спальных мест: {{ booking_num.bed_count }}</p>
+                  <p class="card-text">Цена за сутки: <strong>{{ booking_num.price }}₽</strong></p>
+      </div>
+    </div>
+  </div>
+           {% endif %}
+                {% if request.session.customer %}
+                    <span>Ваш телефон: <strong>{{ profile.phone }}</strong></span>
+                    <span><a href="{% url 'profile' %}">Изменить</a></span><br>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary">Вам необходимо войти для продолжения</a>
+                {% endif %}
+            </div>
+                           {% if request.session.customer %}
+                               <form action="/rentobject" method="GET">
+                                                                    <input type="hidden" name="book_id" value="{{ booking_num.id }}">
+                                                                   <input type="hidden" name="doorder" value="1">
+                                    <input type="hidden" name="summa" value="{{ summa }}">
+                                    <input type="hidden" name="obj_id" value="{{ rent_obj.id }}">
+                                                                   <input type="hidden" name="obj_id" value="{{ rent_obj.id }}">
+                                    <input type="hidden" name="obj_id" value="{{ rent_obj.id }}">
+
+
+                               </form>
+                             <a href="rentobject?book_id={{ booking_num.id }}&doorder=1&summa={{ summa }}&obj_id={{ rent_obj.id }}&start={{ start }}&finish={{ finish }}"
+                                class="btn btn-primary mb-4" >Забронировать</a>
+                             {% endif %}
+                         <button class="btn btn-primary mb-4" type="submit">Рассчитать цену</button>
+           </center>
+                    <input type="hidden" name="book_id" value="{{ booking_num.id}}">
+                 </form>
+
+<div id='map'  style='width: 100%; height: 300px;'></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiYXZzaGlyeWFldiIsImEiOiJjbDNlYTdqeHYwZzQyM2NsNXhva29ra2luIn0.8LTcnWtE4b8v3hR1If8KWw';
+
+const geojson = {
+'type': 'FeatureCollection',
+'features': [
+{
+'type': 'Feature',
+'geometry': {
+'type': 'Point',
+'coordinates': [{{ longitude }}, {{latitude}}]
+},
+'properties': {
+'title': '',
+'description': '{{rent_obj.name}}'
+}
+}
+]
+};
+
+const map = new mapboxgl.Map({
+container: 'map',
+style: 'mapbox://styles/avshiryaev/cl3ea9ugo000y14oz8ryu8r02',
+center: [{{ longitude }}, {{latitude}}],
+zoom: 15
+});
+
+// add markers to map
+for (const feature of geojson.features) {
+// create a HTML element for each feature
+const el = document.createElement('div');
+el.className = 'marker';
+
+// make a marker for each feature and add it to the map
+new mapboxgl.Marker(el)
+.setLngLat(feature.geometry.coordinates)
+.setPopup(
+new mapboxgl.Popup({ offset: 25 }) // add popups
+.setHTML(
+`<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
+)
+)
+.addTo(map);
+}
+</script>
+            </div>
+        </div>
+    </div>
+
+    {% if message != None %}
+  <script type="text/javascript">
+    $(window).on('load',function(){
+        $('#numAdd').modal('show');
+    });
+</script>
+    {% endif %}
+        <div class="modal fade" id="numAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Успешно!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Бронирование успешно завершено!
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

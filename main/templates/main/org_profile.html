@@ -1,0 +1,221 @@
+{% extends 'main/base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+<body>
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-4 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+                <span class="font-weight-bold">{{ profile.name }}</span><span class="text-black-50">{{ profile.email }}</span><span>{{ profile.phone }}</span></div>
+
+            <div class="p-3 py-5">
+                <div class="d-flex align-items-center experience">
+                    <span><h4 class="text-right">История бронирования</h4></span></div>
+            <div class="list-group">
+
+                {% for b in book %}
+                    {% for foo in b %}
+                        <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+    <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1"><span><strong>{{ foo.start_date }} -</strong></span>
+                                        <span><strong>{{ foo.finish_date }}</strong></span></h5>
+      <small>{{ foo.summ }} руб</small>
+     </div>
+                        {% for cus in customer %}
+                            {% if cus.id == foo.id_renter %}
+                                 <p class="mb-1">Имя арендатора: <strong>{{ cus.first_name }}</strong></p>
+    <small>Номер телефона: <strong>{{ cus.phone }}</strong></small>
+                                        <p>Номер для сдачи: <strong>{{ foo.id_rent_num }}</strong></p>
+                            {% endif %}
+                        {% endfor %}
+
+                        </a>
+                    {% endfor %}
+                    {% endfor %}
+            </div>
+            </div>
+
+        </div>
+        <div class="col-md-8 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Ваши объекты</h4>
+                </div>
+                {% for el in obj_rent %}
+           <div class="card shadow" >
+  <img src="{{ el.cover.url }}" class="card-img-top" alt="..." style="object-fit: cover; height: 13rem;">
+  <div class="card-body mb-4">
+        <div class="row">
+    <div class="col-10">
+       <p><strong>{{ el.name }}</strong></p>
+        <p>Телефон: {{ el.phone }}</p>
+        <p>Город: {{ el.city }}</p>
+        <p>Адрес: {{ el.address }}</p>
+        <p>Тип объекта: {{ el.objectType }}</p>
+    </div>
+    <div class="col">
+        {% for item in rent_num %}
+            {% for foo in item %}
+                {% if foo.id_rent_object == el.id %}
+
+
+      <div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ foo.id }}" aria-expanded="true" aria-controls="collapseOne">
+        Номер {{ foo.id }}
+      </button>
+    </h2>
+    <div id="collapse{{ foo.id }}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+                    <p><strong>Цена: </strong>{{ foo.price }}</p>
+                    <p><strong>Спальных мест: </strong>{{ foo.bed_count }}</p>
+                    <p><strong>Удобства: </strong> {{ foo.comfort }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+  </div>
+<div class="mt-4">
+      <form method="POST" action="/org_profile">
+          {% csrf_token %}
+
+          <input type="submit" class="btn btn-primary" value="Удалить" name="_delete">
+          <input type="submit" class="btn btn-primary" value="Добавить номер" name="_add">
+          <input type="hidden" name="obj_id" value="{{ el.id }}">
+          <input type="hidden" name="form_type" value="formThree">
+      </form>
+</div>
+  </div>
+</div>
+                {% endfor %}
+                <a class="btn btn-primary mt-4" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Добавить объект</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel">Добавление объекта</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form action="/org_profile" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+              <input type="hidden" name="form_type" value="formOne">
+              <input type="hidden" name="obj_id" value="{{ obj_id }}">
+        <div class="col-md-12">
+                        <div class="col-12">
+              <label for="name" class="form-label">Имя объекта</label>
+              <input type="text" name="name" class="form-control" id="name" placeholder="Введите имя объекта" required="">
+            </div>
+              <label for="country" class="form-label">Город</label>
+              <select class="form-select" name="city" id="country" required="">
+                  {% for el in cities %}
+                    <option>{{ el.name }}</option>
+                  {% endfor %}
+              </select>
+                <div class="col-12">
+              <label for="address" class="form-label">Адрес</label>
+              <input type="text" name="address" class="form-control" id="address" placeholder="Введите адрес объекта" required="">
+            </div>
+            <div class="col-12">
+              <label for="phone" class="form-label">Телефон</label>
+              <input type="text" name="phone" class="form-control" id="phone" placeholder="7777777777" required="">
+            </div>
+         <div class="mb-3">
+            <label for="message-text" class="col-form-label">Описание объекта</label>
+            <textarea name="descr" class="form-control" id="message-text"></textarea>
+          </div>
+        <label for="type" class="form-label">Тип объекта</label>
+              <select name="type" class="form-select" id="type" required="">
+                  {% for el in obj_types %}
+                    <option>{{ el.name }}</option>
+                  {% endfor %}
+              </select>
+                                 <div class="col-md-12 mt-4 ">
+                    <input type="file" class="form-control"  name="file">
+             </div>
+        </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" >Добавить</button>
+      </div>
+          </form>
+    </div>
+  </div>
+</div>
+</div>
+    {% if obj_id != None %}
+  <script type="text/javascript">
+    $(window).on('load',function(){
+        $('#numAdd').modal('show');
+    });
+</script>
+    {% endif %}
+    <div class="modal fade" id="numAdd" aria-hidden="true" aria-labelledby="numAdd" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="numAdd">Добавление номера</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form action="/org_profile" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="form_type" value="formTwo">
+              <input type="hidden" name="obj_id" value="{{ obj_id }}">
+        <div class="col-md-12">
+              <label for="kolvo" class="form-label">Количество спальных мест</label>
+              <input type="number" name="kolvo" class="form-control" id="kolvo" value="1" min="1" max="5">
+            <hr>
+        <span>Удобства</span><br>
+                <input class="form-check-input" name="check1" type="checkbox" value="беспроводной интернет Wi-Fi" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">беспроводной интернет Wi-Fi</label>
+                <br>
+                            <input class="form-check-input" name="check2" type="checkbox" value="постельное белье" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">постельное белье</label>
+                <br>
+                            <input class="form-check-input" name="check3" type="checkbox" value="кондиционер" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">кондиционер</label>
+                <br>
+                            <input class="form-check-input" name="check4" type="checkbox" value="полотенца" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">полотенца</label>
+                <br>
+                            <input class="form-check-input" name="check5" type="checkbox" value="телевизор" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">телевизор</label>
+                <br>
+                            <input class="form-check-input" name="check6" type="checkbox" value="электрический чайник" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">электрический чайник</label>
+                <br>
+            <hr>
+            <div class="col-12">
+                      <label for="price" class="form-label">Цена за ночь</label>
+            <input type="number" name="price" class="form-control" id="price" value="0" min="0" max="500000">
+            </div>
+             <div class="col-md-12 mt-4 ">
+                    <input type="file" class="form-control"  name="file" id="formFileMultiple" multiple>
+             </div>
+        </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" >Добавить</button>
+      </div>
+          </form>
+    </div>
+  </div>
+</div>
+</div>
+</body>
+{% endblock %}

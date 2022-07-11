@@ -1,0 +1,26 @@
+{% extends 'main/base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+<body>
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            {% for foo in rent_obj %}
+                           <div class="col">
+                            <center>
+                <div class="card" style="width: 300px;">
+  <img src="{{ foo.cover.url }}" class="card-img-top" alt="..." style="height: 300px; width: 300px; object-fit: cover;">
+  <div class="card-body">
+    <div style="height: 80px; overflow: hidden;"><h5 class="card-title">{{ foo.name}}</h5></div>
+    <a href="rentobject?obj_id={{ foo.id }}" class="btn btn-primary">Подробнее</a>
+  </div>
+</div>
+                            </center>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
